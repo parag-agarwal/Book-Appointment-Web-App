@@ -1,0 +1,461 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<link rel="stylesheet" href="css/intlTelInput.css" />
+
+<style>
+    /*form styles*/
+
+    #msform fieldset {
+        background: white;
+        border: 0 none;
+        border-radius: 3px;
+        box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.2);
+        box-sizing: border-box;
+        width: 50%;
+        min-width: 320px;
+        margin: 15px auto;
+    }
+
+        #msform fieldset:not(:first-of-type) {
+            display: none;
+        }
+    /*inputs*/
+
+    #msform .text-input {
+        padding: 7px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        margin-bottom: 10px;
+        width: 100%;
+        box-sizing: border-box;
+        font-family: montserrat;
+        color: #2C3E50;
+        font-size: 13px;
+    }
+    /*buttons*/
+
+    #msform .action-button {
+        width: 100px;
+        background: #27AE60;
+        font-weight: bold;
+        color: white;
+        border: 0 none;
+        border-radius: 1px;
+        cursor: pointer;
+        margin: 10px 5px;
+    }
+
+        #msform .action-button:hover,
+        #msform .action-button:focus {
+            box-shadow: 0 0 0 2px white, 0 0 0 3px #27AE60;
+        }
+    /*headings*/
+
+    .fs-title {
+        font-size: 15px;
+        text-transform: uppercase;
+        color: #2C3E50;
+        margin-bottom: 10px;
+    }
+
+    .fs-subtitle {
+        font-weight: normal;
+        font-size: 13px;
+        color: #666;
+        margin-bottom: 20px;
+    }
+    /*progressbar*/
+
+    #progressbar {
+        overflow: hidden;
+        /*CSS counters to number the steps*/
+        counter-reset: step;
+        text-align: center;
+        width: 60%;
+        margin: 30px auto;
+        padding: 15px;
+    }
+
+        #progressbar li {
+            list-style-type: none;
+            color: #616161;
+            text-transform: uppercase;
+            font-size: 9px;
+            width: 33.33%;
+            float: left;
+            position: relative;
+        }
+
+            #progressbar li:before {
+                content: counter(step);
+                counter-increment: step;
+                width: 20px;
+                line-height: 20px;
+                display: block;
+                font-size: 15px;
+                color: #333;
+                background: white;
+                border-radius: 3px;
+                margin: 0 auto 5px auto;
+            }
+
+            #progressbar li:first-child:after {
+                /*connector not needed before the first step*/
+                content: none;
+            }
+            /*marking active/completed steps green*/
+            /*The number of the step and the connector before it = green*/
+
+            #progressbar li.active:before,
+            #progressbar li.active:after {
+                background: #27AE60;
+                color: white;
+            }
+
+    .field-title {
+        text-align: center;
+        padding: 15px;
+        padding-top: 0px;
+    }
+
+    .field-next {
+        text-align: center;
+        padding: 10px;
+    }
+
+        .field-next input {
+            margin: 0 auto !important;
+        }
+
+    fieldset label {
+        margin: 8px 0;
+    }
+
+    #msform fieldset {
+        transition: width 1s;
+    }
+
+    #google-map {
+        width: 100%;
+    }
+
+    .postal-code-search, .banks-list {
+        border-right: 1px solid lightgray;
+    }
+</style>
+
+<h1 style="display:inline; top:10px; left:10px;"><i class="fa fa-university" aria-hidden="true"></i>&nbsp;<span style="font-size:1.2em; vertical-align: middle;">DBS</span></h1>
+
+<div class="header-title" style="text-align:center;">
+    <h1> &nbsp;&nbsp; Book Your Appointment</h1>
+</div>
+
+<form method="post" novalidate>
+    <div id="msform">
+        <!-- progressbar -->
+        <ul id="progressbar">
+            <li class="active" data-fieldset="personal-details">Personal Details</li>
+            <li data-fieldset="select-a-branch">Select Branch</li>
+            <li data-fieldset="select-date">Select Date and Time</li>
+        </ul>
+        <!-- fieldsets -->
+        <div class="row">
+            <div class="col-lg-12">
+                <fieldset class="personal-details">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="field-title"><h2 class="fs-title">Personal Details</h2></div>
+                            <div id="MessageBox">
+                            </div>
+                            <div class="form-group col-lg-12">
+                                <div class="col-lg-3">
+                                    <label>
+                                        Full Name
+                                    </label>
+                                </div>
+                                <div class="col-lg-9">
+                                    <input type="text" class="text-input" name="fullname" placeholder="John Doe" />
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-12">
+                                <div class="col-lg-3">
+                                    <label>
+                                        Phone No.
+                                    </label>
+                                </div>
+                                <div class="col-lg-9">
+                                    <input type="tel" id="phone" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="field-next col-lg-12">
+                                <input type="button" name="next" class="next action-button form-control submit-personal-details" value="Next" />
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset class="select-a-branch">
+                    <h2 class="fs-title">Personal Details</h2>
+                    <div class="form-group col-lg-4 postal-code-search">
+                        <div class="col-lg-12">
+                            <label>
+                                Enter your Postal Code
+                            </label>
+
+                        </div>
+                        <div class="col-lg-12">
+                            <input type="text" class="text-input" name="postalcode" />
+                        </div>
+                        <div id="google-map"></div>
+                    </div>
+                    <div class="col-lg-4 banks-list">
+                    </div>
+                    <div class="col-lg-4 bank-details">
+                    </div>
+                    <input type="button" name="next" class="next action-button form-control" value="Next" style="display:none;" />
+                </fieldset>
+                <fieldset>
+                    <h2 class="fs-title">Personal Detail</h2>
+                    <h3 class="fs-subtitle">We will never sell it</h3>
+                    <input type="text" name="fname" placeholder="First Name" />
+                    <input type="text" name="lname" placeholder="Last Name" />
+                    <input type="text" name="phone" placeholder="Phone" />
+                    <textarea name="address" placeholder="Address"></textarea>
+                    <input type="submit" name="submit" class="submit action-button" value="Submit" />
+                </fieldset>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+    <script type="text/javascript" src="js/intlTelInput.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.min.js"></script>
+
+    <script id="bankSelectTemplate" type="text/x-handlebars-template">
+        <div class="bank-select" data-bankid="{{latitude}},{{longitude}}">
+            <h4>{{name}}</h4>
+            <p>{{address}},</p>
+            <p>{{postal_code}}</p>
+            <div class="distance"></div>
+            <div class="duration"></div>
+        </div>
+    </script>
+
+    <script id="bankDetailsTemplate" type="text/x-handlebars-template">
+        <p>{{name}}</p>
+        <p>{{address}},</p>
+        <p>{{postal_code}}</p>
+        <p>SMSQ : {{SMSQ}}</p>
+        <div>{{{operatingHours}}}</div>
+    </script>
+
+
+    <script>
+        (function ($) {
+
+            var rad = function (x) {
+                return x * Math.PI / 180;
+            };
+
+            var getDistance = function (p1, p2) {
+                var R = 6378137; // Earth’s mean radius in meter
+                var dLat = rad(p2.lat - p1.lat);
+                var dLong = rad(p2.lng - p1.lng);
+                var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                    Math.cos(rad(p1.lat)) * Math.cos(rad(p2.lat)) *
+                    Math.sin(dLong / 2) * Math.sin(dLong / 2);
+                var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                var d = R * c;
+                return d;
+            };
+
+            function getBankCoordinatesString(bank) {
+                return bank.latitude + "," + bank.longitude;
+            }
+
+            $(".submit-personal-details").click(function () {
+                var isNameEntered = !!$('input[name="fullname"]').val();
+                var isNameValid = isNameEntered && $('input[name="fullname"]').val().trim().length >= 3;
+                var isNumberEntered = !!$('#phone').val();
+                var isNumberValid = isNumberEntered && $("#phone").intlTelInput("isValidNumber");
+                var errorMessage = null;
+
+                if (!isNameEntered && !isNumberEntered) {
+                    errorMessage = "Please enter your Full Name and Phone Number";
+                }
+                else if (!isNameEntered) {
+                    errorMessage = "Please enter your Full Name";
+                }
+                else if (!isNumberEntered) {
+                    errorMessage = "Please enter your Phone Number";
+                }
+                else if (!isNameValid && !isNumberValid) {
+                    errorMessage = "Please enter a valid Name and Phone Number";
+                }
+                else if (!isNameValid) {
+                    errorMessage = "Full Name cannot be less than three characters";
+                }
+                else if (!isNumberValid) {
+                    errorMessage = "Please enter a valid Phone Number";
+                }
+
+                if (errorMessage) {
+                    notifier.error(errorMessage);
+                    return false;
+                }
+                else {
+                    gotoSelectBranchFieldSet(this);
+                }
+            });
+
+            function gotoSelectBranchFieldSet(e) {
+                $(".personal-details").hide();
+                $('li[data-fieldset="personal-details"]').removeClass("active");
+                $('li[data-fieldset="select-a-branch"]').addClass("active");
+                $(".select-a-branch").show();
+                $(".select-a-branch").css("width", "90%");
+                $("#google-map").css("height", $("#google-map")[0].offsetWidth);
+            }
+
+            $("#phone").intlTelInput({
+                utilsScript: "/js/intlTelInputUtils.js",
+                separateDialCode: true,
+                initialCountry: "sg"
+            });
+
+            /*------------Branch Selector -----------------------*/
+
+            var bankSelectTemplate = Handlebars.compile($("#bankSelectTemplate").html());
+            var bankDetailsTemplate = Handlebars.compile($("#bankDetailsTemplate").html());
+
+            var mapControls = function () {
+                var directionsService;
+                var directionsDisplay;
+                var nearestBanks;
+                var postalCode;
+                var bankAddressMap;
+
+                function init() {
+                    
+                    directionsService = new google.maps.DirectionsService;
+                    directionsDisplay = new google.maps.DirectionsRenderer;
+                    var map = new google.maps.Map(document.getElementById('google-map'), {
+                        zoom: 11,
+                        center: { lat: 1.362984, lng: 103.834600 }
+                    });
+                    directionsDisplay.setMap(map);
+                    addEventListenersToPostalInput();
+                }
+
+                function addEventListenersToPostalInput() {
+                    $("input[name='postalcode']").on("input", function (e) {
+                        var $e = $(e.currentTarget);
+                        var inputCode = $e.val().trim();
+                        if (inputCode.length === 6 && /^[0-9]+$/.test(inputCode)) {
+                            postalCode = inputCode;
+                            searchNearbyBranches();
+                        }
+                    });
+                }
+
+                function searchNearbyBranches() {
+                    bankAddressMap = banks.reduce(function (map, bank) {
+                        map[getBankCoordinatesString(bank)] = bank;
+                        return map;
+                    }, {});
+
+                    $.get("http://maps.googleapis.com/maps/api/geocode/json?address=" + postalCode + "&apikey=AIzaSyDc6PZzinreqhsSQPcgSZhorj212wcI8_g", function (data, status) {
+                        if (!data) {
+                            notifier.error("An error occured while fetching nearest banks");
+                            return false;
+                        }
+                        var geoInfo = data;
+                        if (geoInfo.results.length) {
+                            var result = geoInfo.results[0];
+                            var latlng = result.geometry.location;
+                            for (var i = 0; i < banks.length; i++) {
+                                banks[i].distanceFromPostalCode = getDistance(latlng, { "lat": banks[i].latitude, "lng": banks[i].longitude });
+                            }
+                            nearestBanks = banks.sort(function (bank1, bank2) {
+                                return bank1.distanceFromPostalCode - bank2.distanceFromPostalCode;
+                            });
+                            displayBanks(nearestBanks);
+                            showRouteToBank(nearestBanks[0]);
+                            showBankDetails(nearestBanks[0]);
+                            attachClickHandlerToDisplayRoute();
+                        }
+                    });
+                }
+
+                function showRouteToBank(bank) {
+                    directionsService.route({
+                        origin: postalCode,
+                        destination: bank.latitude + "," + bank.longitude,
+                        travelMode: 'DRIVING'
+                    }, function (response, status) {
+                        if (status === 'OK') {
+                            directionsDisplay.setDirections(response);
+                            if (response.routes.length) {
+                                displayRouteMetrics(bank, response.routes[0]);
+                            }
+                        } else {
+                            console.log('Directions request failed due to ' + status);
+                        }
+                    });
+                }
+
+                function showBankDetails(bank) {
+                    $(".bank-details").html(bankDetailsTemplate(bank));
+                }
+
+                function makeBankActive(bank) {
+                    $('.bank-select[data-bankid="' + getBankCoordinatesString(bank) + '"]').css
+                }
+
+                function displayBanks(banks) {
+                    $(".banks-list").html("");
+                    var top5banks = banks.slice(0, 5);
+                    for (var i = 0; i < 5; i++) {
+                        $(".banks-list").append(bankSelectTemplate(banks[i]));
+                    }
+                }
+
+                function displayRouteMetrics(bank, route) {
+                    if (route.legs.length) {
+                        var distance = route.legs[0].distance.text;
+                        var duration = route.legs[0].duration.text;
+                        $('.bank-select[data-bankid="' + getBankCoordinatesString(bank) + '"] .distance').html(distance);
+                        $('.bank-select[data-bankid="' + getBankCoordinatesString(bank) + '"] .duration').html(duration);
+                    }
+                }
+
+                function attachClickHandlerToDisplayRoute() {
+                    $(".select-a-branch").on("click", ".bank-select", function (e) {
+                        var $e = $(e.currentTarget);
+                        showRouteToBank(bankAddressMap[$e.data("bankid")]);
+                        showBankDetails(bankAddressMap[$e.data("bankid")]);
+                    });
+                }
+
+                mapControls.init = init;
+            };
+
+            mapControls();
+
+            window.initMap = function () {
+                window.initMap = null;
+                mapControls.init();
+            }
+
+        })(jQuery);
+    </script>
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBHXD3NoDs5NQEgSV1n4YZVR4pMCw2-W70&callback=initMap">
+    </script>
+}
