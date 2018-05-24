@@ -5,7 +5,7 @@
 }
 
 <link rel="stylesheet" href="css/intlTelInput.css" />
-
+<link rel="stylesheet" href="~/css/pikaday.css" />
 <style>
     /*form styles*/
 
@@ -85,7 +85,7 @@
             color: #616161;
             text-transform: uppercase;
             font-size: 9px;
-            width: 33.33%;
+            width: 25%;
             float: left;
             position: relative;
         }
@@ -146,6 +146,41 @@
     .postal-code-search, .banks-list {
         border-right: 1px solid lightgray;
     }
+
+    .select-a-branch .bank-select {
+        border: 1px solid lightgrey;
+        padding: 5px 10px;
+    }
+
+    .select-a-branch .bank-details .bank-details-note {
+        background: #eeeeee;
+        padding: 5px 10px;
+    }
+
+    .underline {
+        font-weight: 500;
+        text-decoration: underline;
+    }
+
+    .time-of-day {
+        padding: 15px;
+        border: 1px solid lightgrey;
+        margin: 8px 0;
+    }
+
+    .pika-lendar{
+        float: none;
+        margin: 8px auto;
+    }
+
+    .pika-single{
+        border:none;
+    }
+
+    #date-picker-container{
+        margin-bottom:20px;
+    }
+
 </style>
 
 <h1 style="display:inline; top:10px; left:10px;"><i class="fa fa-university" aria-hidden="true"></i>&nbsp;<span style="font-size:1.2em; vertical-align: middle;">DBS</span></h1>
@@ -160,7 +195,8 @@
         <ul id="progressbar">
             <li class="active" data-fieldset="personal-details">Personal Details</li>
             <li data-fieldset="select-a-branch">Select Branch</li>
-            <li data-fieldset="select-date">Select Date and Time</li>
+            <li data-fieldset="choose-date-time">Select Date and Time</li>
+            <li data-fieldset="record-voice-memo">Voice memo</li>
         </ul>
         <!-- fieldsets -->
         <div class="row">
@@ -199,60 +235,121 @@
                     </div>
                 </fieldset>
                 <fieldset class="select-a-branch">
-                    <h2 class="fs-title">Personal Details</h2>
-                    <div class="form-group col-lg-4 postal-code-search">
-                        <div class="col-lg-12">
-                            <label>
-                                Enter your Postal Code
-                            </label>
-
+                    <div class="row">
+                        <div style="text-align:center;">
+                            <h2 class="fs-title">Select Branch</h2>
                         </div>
+                    </div>
+                    <div class="row">
                         <div class="col-lg-12">
-                            <input type="text" class="text-input" name="postalcode" />
+                            <div class="form-group col-lg-4 postal-code-search">
+                                <div class="col-lg-12">
+                                    <h4>Enter your Postal Code</h4>
+                                </div>
+                                <div class="col-lg-12">
+                                    <input type="text" class="text-input" name="postalcode" />
+                                </div>
+                                <div id="google-map"></div>
+                            </div>
+                            <div class="col-lg-4 banks-list">
+                            </div>
+                            <div class="col-lg-4 bank-details">
+                            </div>
                         </div>
-                        <div id="google-map"></div>
                     </div>
-                    <div class="col-lg-4 banks-list">
-                    </div>
-                    <div class="col-lg-4 bank-details">
-                    </div>
-                    <input type="button" name="next" class="next action-button form-control" value="Next" style="display:none;" />
+                    <input type="text" name="bankId" style="display:none;" />
                 </fieldset>
-                <fieldset>
-                    <h2 class="fs-title">Personal Detail</h2>
-                    <h3 class="fs-subtitle">We will never sell it</h3>
-                    <input type="text" name="fname" placeholder="First Name" />
-                    <input type="text" name="lname" placeholder="Last Name" />
-                    <input type="text" name="phone" placeholder="Phone" />
-                    <textarea name="address" placeholder="Address"></textarea>
-                    <input type="submit" name="submit" class="submit action-button" value="Submit" />
+                <fieldset class="choose-date-time">
+                    <div class="row">
+                        <div style="text-align:center;">
+                            <h2 class="fs-title">Select Date and Time</h2>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="col-lg-6">
+                                <input type="text" id="datepicker" style="display:none">
+                                <div id="date-picker-container"></div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="col-lg-12 time-of-day morning">
+                                    Morning (9AM to 12PM) <span class="preferred-marker" style="display:none;">
+                                        <i class="fa fa-arrow-right" style="color:green"></i> &nbsp;Preferred
+                                    </span>
+                                </div>
+                                <div class="col-lg-12 time-of-day afternoon">
+                                    Afternoon (12PM to 2PM) <span class="preferred-marker" style="display:none;">
+                                        <i class="fa fa-arrow-right" style="color:green"></i> &nbsp;Preferred
+                                    </span>
+                                </div>
+                                <div class="col-lg-12 time-of-day evening">
+                                    Evening (2PM to 6PM) <span class="preferred-marker" style="display:none;">
+                                        <i class="fa fa-arrow-right" style="color:green"></i> &nbsp;Preferred
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="field-next col-lg-12">
+                            <input type="button" name="next" class="next action-button form-control submit-appointment-date" value="Next" style="display:none" />
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset class="record-voice-memo">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="field-title"><h2 class="fs-title">Voice Memo</h2></div>
+                            <div class="form-group col-lg-12">
+                                <div style="text-align:center;">
+                                    <i class="fa fa-microphone fa-2x" style="color:red;"></i>   
+                                </div>
+                            </div>
+
+                            <div class="field-next col-lg-12">
+                                <input type="submit" name="next" class="next action-button form-control" value="Submit" />
+                            </div>
+                        </div>
+                    </div>
                 </fieldset>
             </div>
         </div>
     </div>
 </form>
 
+<div style="text-align:right;margin-top:30px;padding:10px;">
+    <button onclick="body.style.zoom='100%'">Zoom 100%</button>
+    <button onclick="body.style.zoom='150%'">Zoom 150%</button>
+    <button onclick="body.style.zoom='200%'">Zoom 200%</button>
+</div>
+
 @section Scripts{
     <script type="text/javascript" src="js/intlTelInput.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.min.js"></script>
+    <script type="text/javascript" src="~/js/pikaday.js"></script>
 
     <script id="bankSelectTemplate" type="text/x-handlebars-template">
         <div class="bank-select" data-bankid="{{latitude}},{{longitude}}">
-            <h4>{{name}}</h4>
-            <p>{{address}},</p>
-            <p>{{postal_code}}</p>
-            <div class="distance"></div>
-            <div class="duration"></div>
+
+            <h4>
+                {{name}}
+                <i class="fa fa-check fa-lg check-mark" style="display:none; color:green"></i>
+            </h4>
+            <p>{{address}}, {{postal_code}}</p>
+            <div class="distance underline"></div>
+            <div class="duration underline"></div>
         </div>
     </script>
 
     <script id="bankDetailsTemplate" type="text/x-handlebars-template">
-        <p>{{name}}</p>
-        <p>{{address}},</p>
-        <p>{{postal_code}}</p>
-        <p>SMSQ : {{SMSQ}}</p>
-        <div>{{{operatingHours}}}</div>
+        <p><b>{{name}}</b></p>
+        <p><b>SMSQ : {{SMSQ}}</b></p>
+        <div class="bank-details-note">{{{operatingHours}}}</div>
+        <div class="field-next col-lg-12">
+            <input type="button" name="next" class="next action-button form-control submit-branch-name" data-bankid="{{latitude}},{{longitude}}" value="Next" />
+        </div>
     </script>
 
 
@@ -342,7 +439,7 @@
                 var bankAddressMap;
 
                 function init() {
-                    
+
                     directionsService = new google.maps.DirectionsService;
                     directionsDisplay = new google.maps.DirectionsRenderer;
                     var map = new google.maps.Map(document.getElementById('google-map'), {
@@ -390,7 +487,14 @@
                             showBankDetails(nearestBanks[0]);
                             attachClickHandlerToDisplayRoute();
                         }
+                        else {
+                            displayNoResults();
+                        }
                     });
+                }
+
+                function displayNoResults() {
+                    $(".select-a-branch .banks-list").html("<h4>No branches found</h4>");
                 }
 
                 function showRouteToBank(bank) {
@@ -430,18 +534,38 @@
                     if (route.legs.length) {
                         var distance = route.legs[0].distance.text;
                         var duration = route.legs[0].duration.text;
-                        $('.bank-select[data-bankid="' + getBankCoordinatesString(bank) + '"] .distance').html(distance);
-                        $('.bank-select[data-bankid="' + getBankCoordinatesString(bank) + '"] .duration').html(duration);
+                        $('.bank-select[data-bankid="' + getBankCoordinatesString(bank) + '"] .distance').html("Distance : " + distance);
+                        $('.bank-select[data-bankid="' + getBankCoordinatesString(bank) + '"] .duration').html("Travel Time : " + duration);
                     }
                 }
 
                 function attachClickHandlerToDisplayRoute() {
+                    $(".bank-select .check-mark").hide();
+                    $(".bank-select .check-mark:first").show();
                     $(".select-a-branch").on("click", ".bank-select", function (e) {
                         var $e = $(e.currentTarget);
                         showRouteToBank(bankAddressMap[$e.data("bankid")]);
                         showBankDetails(bankAddressMap[$e.data("bankid")]);
+                        $(".bank-select .check-mark").hide();
+                        $(".check-mark", $e).show();
                     });
                 }
+
+                $(".select-a-branch").on("click", ".submit-branch-name", function (e) {
+                    var $e = $(e.currentTarget);
+                    var selectedBranch = $e.data("bankid");
+                    if (!bankAddressMap.hasOwnProperty(selectedBranch)) {
+                        return false;
+                    }
+                    $(".select-a-branch input[name='bankId']").val(selectedBranch);
+
+                    $(".select-a-branch").hide();
+                    $('li[data-fieldset="select-a-branch"]').removeClass("active");
+                    $('li[data-fieldset="choose-date-time"]').addClass("active");
+                    $(".choose-date-time").show();
+                    $(".choose-date-time").css("width", "60%");
+                    InitializeDatePicker();
+                })
 
                 mapControls.init = init;
             };
@@ -452,6 +576,84 @@
                 window.initMap = null;
                 mapControls.init();
             }
+
+            var datesAvailability = {
+                "21": {
+                    "morning": 3,
+                    "afternoon": 6,
+                    "evening": 10
+                },
+                "22": {
+                    "morning": 6,
+                    "afternoon": 2,
+                    "evening": 10
+                }
+            }
+
+            function InitializeDatePicker() {
+                picker = new Pikaday({
+                    field: document.getElementById('datepicker'),
+                    firstDay: 1,
+                    minDate: new Date(),
+                    maxDate: new Date().setDate(new Date().getDate() + 28),
+                    yearRange: [2018, 2019],
+
+                    disableDayFn: function (theDate) {
+                        return theDate.getDay() === 0;
+                    },
+                    bound: false,
+                    container: document.getElementById('date-picker-container'),
+                    onSelect: dateInputListener
+                });
+            }
+
+            function dateInputListener(dateText) {
+                var selectedDay = new Date(dateText).getDate();
+                var availability = datesAvailability[selectedDay + ""];
+                setAvailabilityColor(availability.morning, "morning");
+                setAvailabilityColor(availability.afternoon, "afternoon");
+                setAvailabilityColor(availability.evening, "evening");
+                addTimeOfDayInputListener();
+            }
+
+            function setAvailabilityColor(availability, className) {
+                $("." + className + " .preferred-marker").hide();
+                if (availability <= 4) {
+                    $("." + className + " .preferred-marker").show();
+                    $("." + className).css("background-color", "white");
+                    $("." + className).attr("title", "least waiting time");
+                }
+                else if (availability < 10) {
+                    $("." + className).css("background-color", "orange");
+                    $("." + className).attr("title", "longer waiting times");
+                }
+                else {
+                    $("." + className).css("background-color", "lightgrey");
+                    $("." + className).attr("title", "unavailable");
+                }
+            }
+
+            function addTimeOfDayInputListener() {
+                $(".time-of-day").click(function () { 
+                    $(".submit-appointment-date").show();
+                });
+
+            }
+
+
+            $(".choose-date-time").on("click", ".submit-appointment-date", function (e) {
+                var $e = $(e.currentTarget);
+                $('li[data-fieldset="choose-date-time"]').removeClass("active");
+                $('li[data-fieldset="record-voice-memo"]').addClass("active");
+                $(".choose-date-time").hide();
+                $(".record-voice-memo").show();
+                $(".record-voice-memo").css("width", "40%");
+            });
+
+            $("form").on("submit", function () {
+                window.location = "/ThankYou";
+                return false;
+            });
 
         })(jQuery);
     </script>
